@@ -71,8 +71,8 @@ streamlit run app.py
 
 > Example screenshot of the app running locally:
 
-![UI Screenshot](data/screenshot.png)
-
+![UI Screenshot](scren.png)
+![UI Screenshot](screen.png)
 ---
 
 ## 🧠 Technologies
