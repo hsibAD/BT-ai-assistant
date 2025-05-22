@@ -1,5 +1,5 @@
 # binance_symbols.py
-
+''''
 BINANCE_SYMBOLS = {
     "bitcoin": "BTC",
     "ethereum": "ETH",
@@ -38,4 +38,4 @@ BINANCE_SYMBOLS = {
     "compound": "COMP",
     "fantom": "FTM",
     "celestia": "TIA",
-}
+}'''

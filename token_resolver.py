@@ -1,36 +1,33 @@
 import requests
+import time
 
 def resolve_token(keyword):
-    keyword = keyword.lower()
-
     try:
-        # получаем топ-500 реальных токенов
-        url = "https://api.coingecko.com/api/v3/coins/markets"
-        params = {
-            "vs_currency": "usd",
-            "order": "market_cap_desc",
-            "per_page": 250,
-            "page": 1
-        }
+        keyword = keyword.lower()
 
-        top_tokens = []
-        for page in range(1, 3):  # 250 * 2 = топ 500
-            params["page"] = page
-            resp = requests.get(url, params=params)
-            top_tokens.extend(resp.json())
+        # Загружаем топ-250 токенов (по капитализации)
+        response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=1")
+        ranked_tokens = response.json()
 
-        # сначала точное совпадение по symbol (если keyword похож на символ)
-        if keyword.isalpha() and len(keyword) <= 5:
-            for coin in top_tokens:
-                if coin["symbol"].lower() == keyword:
-                    return coin["id"]
+        # 1. Строгое совпадение по symbol, id, name
+        for coin in ranked_tokens:
+            if coin["symbol"].lower() == keyword \
+                or coin["id"] == keyword \
+                or coin["name"].lower() == keyword:
 
-        # затем точное совпадение по id или name
-        for coin in top_tokens:
-            if coin["id"] == keyword or coin["name"].lower() == keyword:
+                time.sleep(1)
                 return coin["id"]
 
-        return None  # ничего не нашли в топе
+        # 2. Частичное совпадение (например "sol" найдёт "solana")
+        for coin in ranked_tokens:
+            if keyword in coin["symbol"].lower() \
+                or keyword in coin["id"] \
+                or keyword in coin["name"].lower():
+                
+                time.sleep(1)
+                return coin["id"]
+
+        return None
     except Exception as e:
-        print(f"❌ Token resolution failed: {e}")
+        print(f"Token resolution failed: {e}")
         return None

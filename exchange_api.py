@@ -1,5 +1,5 @@
 import requests
-from binance_symbols import BINANCE_SYMBOLS
+from token_resolver import resolve_token
 
 def get_binance_price(symbol):
     url = f"https://api.binance.com/api/v3/ticker/price?symbol={symbol.upper()}USDT"
@@ -20,16 +20,6 @@ def get_binance_price(symbol):
 def get_price(token_name):
     token_name = token_name.lower()
 
-    # 1. Попробовать через заранее известную мапу
-    symbol = BINANCE_SYMBOLS.get(token_name)
-    if symbol:
-        price, error = get_binance_price(symbol)
-        if price is not None:
-            return f"Current price on Binance: {price} USDT"
-        else:
-            return error
-
-    # 2. Если не найден в мапе — попробовать найти через CoinGecko
     try:
         gecko_url = "https://api.coingecko.com/api/v3/coins/list"
         response = requests.get(gecko_url)
